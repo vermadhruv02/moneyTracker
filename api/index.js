@@ -8,6 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json())
 
+const PORT = 5000 || process.env.PORT;
 
 app.get('/api/test', (req,res)=>{
     res.json('{user: "dhruv", age : 21}')
@@ -31,4 +32,6 @@ app.get('/api/transactions',async (req,res)=>{
     res.json(data);
 })
 
-app.listen(5000);
+app.listen(PORT, ()=>{
+    console.log(`listening at ${PORT}`);
+});

@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 function App() {
   const [name, setName] = useState("");
@@ -7,9 +7,38 @@ function App() {
   const [description, setDescription] = useState("");
   const [transactions,setTransactions] = useState([]);
 
+  const addNewTransaction = useCallback(
+    (e)=> {
+      e.preventDefault();
+      const url = process.env.REACT_APP_API_URL + "/transaction";
+      const price = name.split(" ")[0];
+      console.log(url);
+      fetch(url, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          price,
+          name: name.substring(price.length + 1),
+          description,
+          dateTime,
+        }),
+      })
+        .then((response) => {
+          response.json().then((data) => {
+            setName("");
+            setDateTime("");
+            setDescription("");
+            // console.log("Result:- ", data);
+          });
+        })
+        .catch((err) => {
+          console.log(`ERROR:- ${err}`);
+        });
+    },[dateTime,description,name])
+
   useEffect(() => {
     getTransactions().then(setTransactions)
-  }, []);
+  }, [addNewTransaction]);
   // const data = fetch(url).then((obj) => {
   //   obj.json().then((data) => {
   //      data
@@ -21,33 +50,7 @@ function App() {
   // console.log(response);
   return await response.json();
   }
-  function addNewTransaction(e) {
-    e.preventDefault();
-    const url = process.env.REACT_APP_API_URL + "/transaction";
-    const price = name.split(" ")[0];
-    console.log(url);
-    fetch(url, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        price,
-        name: name.substring(price.length + 1),
-        description,
-        dateTime,
-      }),
-    })
-      .then((response) => {
-        response.json().then((data) => {
-          setName("");
-          setDateTime("");
-          setDescription("");
-          // console.log("Result:- ", data);
-        });
-      })
-      .catch((err) => {
-        console.log(`ERROR:- ${err}`);
-      });
-  }
+
   let balance = 0;
   for (const transaction of transactions) {
     balance += transaction.price;
