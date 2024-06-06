@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json())
 
-const PORT = 5000 || process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 app.get('/api/test', (req,res)=>{
     res.json('{user: "dhruv", age : 21}')
