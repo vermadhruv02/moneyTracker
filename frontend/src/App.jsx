@@ -10,13 +10,13 @@ function App() {
   const addNewTransaction = useCallback(
     (e)=> {
       e.preventDefault();
-      const url = process.env.REACT_APP_API_URL + "/transaction";
+      const url = import.meta.env.REACT_APP_API_URL + "/transaction";
       const price = name.split(" ")[0];
       console.log(url);
       fetch(url, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({
+        body: JSON.stringify({ 
           price,
           name: name.substring(price.length + 1),
           description,
@@ -45,7 +45,7 @@ function App() {
   //   });
   // });
   async function getTransactions() {
-  const url = process.env.REACT_APP_API_URL + "/transactions";
+  const url = import.meta.env.REACT_APP_API_URL + "/transactions";
   const response = await fetch(url);
   // console.log(response);
   return await response.json();
